@@ -44,6 +44,9 @@ class User extends Model implements AuthorizableContract, AuthenticatableContrac
         'user_permission',
         'time_zone_id',
         'time_zone',
+        'profile_url',
+        'profile_picture',
+        'time_zone',
         'verification_code',
         'verification_created_at',
         'verified'
