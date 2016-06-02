@@ -72,6 +72,26 @@ class IatiSettings
         return app('App\Core\V201\Requests\Password');
     }
 
+    public function getActivityElementsChecklist()
+    {
+        return 'App\Core\V201\Forms\Settings\ActivityElementsChecklist';
+    }
+
+    public function getDefaultValues()
+    {
+        return 'App\Core\V201\Forms\Settings\DefaultValues';
+    }
+
+    public function getOrganizationInformation()
+    {
+        return 'App\Core\V201\Forms\Settings\OrganizationInformation';
+    }
+
+    public function getPublishingInfo()
+    {
+        return 'App\Core\V201\Forms\Settings\PublishingInfo';
+    }
+
     public function getRegistrationAgencyRepository()
     {
         return app('App\Core\V201\Repositories\RegistrationAgency');

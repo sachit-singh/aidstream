@@ -216,5 +216,20 @@ class User extends Model implements AuthorizableContract, AuthenticatableContrac
         return $this->where('org_id', null)->get();
     }
 
+    public function getRolesByOrgAndUser($orgId, $userId)
+    {
+        $roles = DB::table($this->table)
+                   ->join('role', 'role.id', '=', 'users.role_id')
+                   ->where('users.org_id', '=', $orgId)
+                   ->where('users.id', '=', $userId)
+                   ->first();
+
+        return $roles;
+    }
+
+    public function role()
+    {
+        return $this->belongsTo('App\Models\Role', 'role_id');
+    }
 
 }

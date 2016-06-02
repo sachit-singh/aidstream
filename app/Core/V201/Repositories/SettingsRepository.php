@@ -6,6 +6,9 @@ use App\Models\Settings;
 use Exception;
 use Illuminate\Database\DatabaseManager;
 use Illuminate\Session\SessionManager;
+use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Storage;
+use Intervention\Image\Facades\Image;
 
 class SettingsRepository implements SettingsRepositoryInterface
 {
@@ -93,4 +96,49 @@ class SettingsRepository implements SettingsRepositoryInterface
 
         $this->organizationData->firstOrCreate(['organization_id' => $organization->id,]);
     }
+
+    /**
+     * save activity elements checklist
+     * @param $default_field_groups
+     * @param $settings
+     */
+    public function saveActivityElementsChecklist($default_field_groups, $settings)
+    {
+        $settings->default_field_groups = $default_field_groups;
+        $settings->save();
+    }
+
+    /**
+     * Save default field values
+     * @param $defaultValues
+     * @param $settings
+     */
+    public function saveDefaultValues($defaultValues, $settings)
+    {
+        $settings->default_field_values = [$defaultValues];
+        $settings->save();
+    }
+
+    /**
+     * save publishing information
+     * @param $publishing_info
+     * @param $settings
+     */
+    public function savePublishingInfo($publishing_info, $settings)
+    {
+        $settings->publishing_type = $publishing_info['publishing'];
+        $registry_info             = [
+            0 => [
+                'publisher_id'        => $publishing_info['publisher_id'],
+                'api_id'              => $publishing_info['api_id'],
+                'publish_files'       => $publishing_info['publish_files'],
+                'publisher_id_status' => $publishing_info['publisher_id_status'],
+                'api_id_status'       => $publishing_info['api_id_status']
+            ]
+        ];
+
+        $settings->registry_info = $registry_info;
+        $settings->save();
+    }
+
 }

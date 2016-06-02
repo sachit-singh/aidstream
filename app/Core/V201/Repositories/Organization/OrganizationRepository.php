@@ -7,6 +7,10 @@ use App\Models\Organization\OrganizationData;
 use App\Models\OrganizationPublished;
 use App\Models\Settings;
 use App\User;
+use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Input;
+use Illuminate\Support\Facades\Storage;
+use Intervention\Image\Facades\Image;
 use Illuminate\Database\Eloquent\Collection;
 use Psr\Log\LoggerInterface;
 
@@ -332,6 +336,42 @@ class OrganizationRepository implements OrganizationRepositoryInterface
                               ->whereRaw("reporting_org #>> '{0, reporting_organization_identifier}' = '" . $reportOrg['reporting_organization_identifier'] . "'");
 
         return $result->first();
+    }
+
+    /** save organization information
+     * @param $organizationInfo
+     * @param $organization
+     */
+    public function saveOrganizationInformation($organizationInfo, $organization)
+    {
+        $organization->twitter          = $organizationInfo['twitter'];
+        $organization->country          = $organizationInfo['country'];
+        $organization->address          = $organizationInfo['address'];
+        $organization->telephone        = $organizationInfo['telephone'];
+        $organization->organization_url = $organizationInfo['organization_url'];
+        $organization->user_identifier  = $organizationInfo['user_identifier'];
+        $file                           = Input::file('organization_logo');
+
+        if ($file) {
+            $fileUrl  = url('files/logos/' . $organization->id . '.' . $file->getClientOriginalExtension());
+            $fileName = $organization->id . '.' . $file->getClientOriginalExtension();
+            $image    = Image::make(File::get($file))->resize(150, 150)->encode();
+            Storage::put('logos/' . $fileName, $image);
+            $organization->logo_url = $fileUrl;
+            $organization->logo     = $fileName;
+        }
+
+        $reporting_org                     = [
+            0 => [
+                'reporting_organization_identifier' => $organizationInfo['country'] . '-' . $organizationInfo['registration_agency'] . '-' . $organizationInfo['registration_number'],
+                'reporting_organization_type'       => $organizationInfo['organization_type'],
+                'narrative'                         => $organizationInfo['narrative']
+            ]
+        ];
+        $organization->reporting_org       = $reporting_org;
+        $organization->registration_agency = $organizationInfo['registration_agency'];
+        $organization->registration_number = $organizationInfo['registration_number'];
+        $organization->save();
     }
 
     /**

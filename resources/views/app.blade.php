@@ -58,12 +58,19 @@
                         @endif
                     </li>
                     <li class="dropdown">
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-                            <span class="avatar-img">
-                                <img src="{{url('images/avatar.svg')}}" width="36" height="36" alt="{{$loggedInUser->name}}">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button"
+                           aria-expanded="false"><span class="avatar-img">
+                                @if(Auth::user()->profile_url)
+                                    <img src="{{Auth::user()->profile_url}}"
+                                         width="36" height="36"
+                                         alt="{{Auth::user()->name}}">
+                                @else
+                                    <img src="{{url('images/avatar.svg')}}"
+                                         width="36" height="36"
+                                         alt="{{Auth::user()->name}}">
+                                @endif
                             </span>
-                            <span class="caret"></span>
-                        </a>
+                            <span class="caret"></span></a>
                         <ul class="dropdown-menu" role="menu">
                             @if(!isSuperAdminRoute())
                                 <li><a href="{{url('user/profile')}}">@lang('trans.my_profile')</a></li>
