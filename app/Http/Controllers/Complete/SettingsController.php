@@ -463,10 +463,10 @@ class SettingsController extends Controller
 
             if (empty($changes['previous']) && empty($changes['changes'])) {
 
-                return redirect()->route('settings . index')->withResponse(['type' => 'warning', 'messages' => ['You do not have any files for the segmentation change to take effect on . ']]);
+                return redirect()->route('settings.index')->withResponse(['type' => 'warning', 'messages' => ['You do not have any files for the segmentation change to take effect on.']]);
             }
 
-            return view('settings . change - log', compact('organizationId', 'changes', 'settings'));
+            return view('settings.change-log', compact('organizationId', 'changes', 'settings'));
         }
 
         if (!$this->settingsManager->updateSettings($settings, $this->organization, $this->settings)) {
@@ -475,7 +475,7 @@ class SettingsController extends Controller
             $response = ['type' => 'success', 'code' => ['updated', ['name' => 'Settings']]];
         }
 
-        return redirect()->to(config('app . admin_dashboard'))->withResponse($response);
+        return redirect()->to(config('app.admin_dashboard'))->withResponse($response);
     }
 
     /**
@@ -490,17 +490,17 @@ class SettingsController extends Controller
         if (null === $segmentationChange || false === $segmentationChange) {
             $response = ['type' => 'warning', 'messages' => $this->getMessageFor($segmentationChange)];
 
-            return redirect()->to(config('app . admin_dashboard'))->withResponse($response);
+            return redirect()->to(config('app.admin_dashboard'))->withResponse($response);
         }
 
         if (!$this->settingsManager->updateSettings(json_decode($request->get('settings'), true), $this->organization, $this->settings)) {
             $response = ['type' => 'danger', 'messages' => ['Failed to update Settings']];
 
-            return redirect()->to(config('app . admin_dashboard'))->withResponse($response);
+            return redirect()->to(config('app.admin_dashboard'))->withResponse($response);
         }
-        $response = ['type' => 'success', 'messages' => ['Settings updated successfully . ']];
+        $response = ['type' => 'success', 'messages' => ['Settings updated successfully.']];
 
-        return redirect()->to(config('app . admin_dashboard'))->withResponse($response);
+        return redirect()->to(config('app.admin_dashboard'))->withResponse($response);
     }
 
     /**
@@ -511,11 +511,11 @@ class SettingsController extends Controller
     protected function getMessageFor($segmentationChange)
     {
         if (null === $segmentationChange) {
-            return ['Could not change segmentation . '];
+            return ['Could not change segmentation.'];
         }
 
         if (false === $segmentationChange) {
-            return ['Could not publish to registry . '];
+            return ['Could not publish to registry.'];
         }
     }
 }
