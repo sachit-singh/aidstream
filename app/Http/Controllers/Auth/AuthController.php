@@ -177,15 +177,21 @@ class AuthController extends Controller
             }
 
             if (Auth::attempt($credentials, $request->has('remember'))) {
-                if (!Auth::user()->enabled) {
+                $user = Auth::user();
+                if (!$user->enabled) {
                     Auth::logout();
 
                     return redirect('/auth/login')->withErrors("Your account has been disabled. Please contact us at <a href='mailto:support@aidstream.org'>support@aidstream.org</a> ");
+                } elseif (!$user->verified_status) {
+                    Auth::logout();
+
+                    return redirect('/auth/login')->withErrors(
+                        "Your account has not be verified yet. Please click connect me link in registration confirmation email. If you are still having problem, please contact us at <a href='mailto:support@aidstream.org'>support@aidstream.org</a> "
+                    );
                 }
-                $user = Auth::user();
                 Session::put('role_id', $user->role_id);
                 Session::put('org_id', $user->org_id);
-                Session::put('admin_id',$user->id);
+                Session::put('admin_id', $user->id);
                 $settings       = Settings::where('organization_id', $user->org_id)->first();
                 $settings_check = isset($settings);
                 $version        = ($settings_check) ? $settings->version : config('app.default_version');
@@ -218,7 +224,9 @@ class AuthController extends Controller
                     ]
                 );
         } catch (\Exception $exception) {
-            return redirect()->back()->withErrors($exception->getMessage());
+            Auth::logout();
+
+            return redirect('/auth/login')->withErrors('unable to login. Please contact us at <a href=\'mailto:support@aidstream.org\'>support@aidstream.org</a>');
         }
     }
 
@@ -281,9 +289,9 @@ class AuthController extends Controller
     {
         $userIdentifier = $request->get('userIdentifier');
         if ($this->organization->where('user_identifier', $userIdentifier)->count() == 0) {
-            $response = ['status' => 'success', 'message' => 'The organization user identifier is available.'];
+            $response = ['status' => 'success', 'message' => 'Organization Name Abbreviation is available.'];
         } else {
-            $response = ['status' => 'danger', 'message' => 'The organization user identifier has already been taken.'];
+            $response = ['status' => 'danger', 'message' => 'Organization Name Abbreviation has already been taken.'];
         }
 
         return $response;

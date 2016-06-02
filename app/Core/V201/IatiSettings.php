@@ -51,4 +51,29 @@ class IatiSettings
     {
         return app('App\Core\V201\Repositories\Document');
     }
+
+    public function getRegisterOrganizationRequest()
+    {
+        return app('App\Core\V201\Requests\RegisterOrganization');
+    }
+
+    public function getRegisterUsersRequest()
+    {
+        return app('App\Core\V201\Requests\RegisterUsers');
+    }
+
+    public function getRegisterRequest()
+    {
+        return app('App\Core\V201\Requests\Register');
+    }
+
+    public function getPasswordRequest()
+    {
+        return app('App\Core\V201\Requests\Password');
+    }
+
+    public function getRegistrationAgencyRepository()
+    {
+        return app('App\Core\V201\Repositories\RegistrationAgency');
+    }
 }

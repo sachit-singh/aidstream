@@ -20,30 +20,45 @@ $router->get('who-is-using/{page}/{count}', 'WhoIsUsingController@listOrganizati
 $router->get('admin/dashboard', 'SuperAdmin\OrganizationController@adminDashboard');
 $router->resource('settings', 'Complete\SettingsController');
 
-$router->put('update-settings', [
-    'as'   => 'update-settings',
-    'uses' => 'Complete\SettingsController@updateSettings'
-]);
+$router->put(
+    'update-settings',
+    [
+        'as'   => 'update-settings',
+        'uses' => 'Complete\SettingsController@updateSettings'
+    ]
+);
 
-$router->post('change-segmentation', [
-    'as'   => 'change-segmentation',
-    'uses' => 'Complete\SettingsController@changeSegmentation'
-]);
+$router->post(
+    'change-segmentation',
+    [
+        'as'   => 'change-segmentation',
+        'uses' => 'Complete\SettingsController@changeSegmentation'
+    ]
+);
 
-$router->post('activity/{activity}/complete', [
-    'as'   => 'activity.complete',
-    'uses' => 'Complete\WorkflowController@complete'
-]);
+$router->post(
+    'activity/{activity}/complete',
+    [
+        'as'   => 'activity.complete',
+        'uses' => 'Complete\WorkflowController@complete'
+    ]
+);
 
-$router->post('activity/{activity}/verify', [
-    'as'   => 'activity.verify',
-    'uses' => 'Complete\WorkflowController@verify'
-]);
+$router->post(
+    'activity/{activity}/verify',
+    [
+        'as'   => 'activity.verify',
+        'uses' => 'Complete\WorkflowController@verify'
+    ]
+);
 
-$router->post('activity/{activity}/publish', [
-    'as'   => 'activity.publish',
-    'uses' => 'Complete\WorkflowController@publish'
-]);
+$router->post(
+    'activity/{activity}/publish',
+    [
+        'as'   => 'activity.publish',
+        'uses' => 'Complete\WorkflowController@publish'
+    ]
+);
 
 $router->get('who-is-using/{organization_id}', 'WhoIsUsingController@getDataForOrganization');
 
@@ -264,3 +279,166 @@ $router->get(
         'uses' => 'Complete\UserLogController@viewDeletedData'
     ]
 );
+
+$router->get(
+    'register',
+    [
+        'as'   => 'registration',
+        'uses' => 'Auth\RegistrationController@showRegistrationForm'
+    ]
+);
+
+$router->post(
+    'register',
+    [
+        'as'   => 'registration.register',
+        'uses' => 'Auth\RegistrationController@register'
+    ]
+);
+
+$router->match(
+    ['GET', 'POST'],
+    'find-similar-organizations/{type?}',
+    [
+        'as'   => 'similar-organizations',
+        'uses' => 'Auth\RegistrationController@showSimilarOrganizations'
+    ]
+);
+
+$router->post(
+    'similar-organizations',
+    [
+        'as'   => 'submit-similar-organization',
+        'uses' => 'Auth\RegistrationController@submitSimilarOrganization'
+    ]
+);
+
+$router->post(
+    'check-org-identifier',
+    [
+        'as'   => 'check-org-identifier',
+        'uses' => 'Auth\RegistrationController@checkOrgIdentifier'
+    ]
+);
+
+$router->get(
+    'similar-organizations/{orgName}',
+    [
+        'as'   => 'similar-org',
+        'uses' => 'Auth\RegistrationController@listSimilarOrganizations'
+    ]
+);
+
+$router->get(
+    'not-my-organization',
+    [
+        'as'   => 'not-my-organization',
+        'uses' => 'ContactController@showContactForm'
+    ]
+);
+
+$router->get(
+    'need-new-user',
+    [
+        'as'   => 'need-new-user',
+        'uses' => 'ContactController@showContactForm'
+    ]
+);
+
+$router->post(
+    'not-my-organization',
+    [
+        'as'   => 'submit-not-my-organization',
+        'uses' => 'ContactController@notMyOrganization'
+    ]
+);
+
+$router->post(
+    'need-new-user',
+    [
+        'as'   => 'submit-need-new-user',
+        'uses' => 'ContactController@needNewuser'
+    ]
+);
+
+$router->post(
+    'contact',
+    [
+        'as'   => 'contact',
+        'uses' => 'ContactController@processEmail'
+    ]
+);
+
+$router->get(
+    'registration/organization',
+    [
+        'as'   => 'registration.organization',
+        'uses' => 'Auth\RegistrationController@showOrgForm'
+    ]
+);
+
+$router->post(
+    'registration/save-organization',
+    [
+        'as'   => 'registration.save-organization',
+        'uses' => 'Auth\RegistrationController@saveOrganization'
+    ]
+);
+
+$router->get(
+    'registration/users',
+    [
+        'as'   => 'registration.users',
+        'uses' => 'Auth\RegistrationController@showUsersForm'
+    ]
+);
+
+$router->post(
+    'registration/complete',
+    [
+        'as'   => 'registration.complete',
+        'uses' => 'Auth\RegistrationController@completeRegistration'
+    ]
+);
+
+$router->get(
+    'user/verification/{code}',
+    [
+        'as'   => 'user-verification',
+        'uses' => 'Auth\VerificationController@verifyUser'
+    ]
+);
+
+$router->get(
+    'user/secondary-verification/{code}',
+    [
+        'as'   => 'secondary-verification',
+        'uses' => 'Auth\VerificationController@verifySecondary'
+    ]
+);
+
+$router->post(
+    'settings/registry-info/{code}',
+    [
+        'as'   => 'save-registry-info',
+        'uses' => 'Auth\VerificationController@saveRegistryInfo'
+    ]
+);
+
+$router->get(
+    'user/create-password/{code}',
+    [
+        'as'   => 'show-create-password',
+        'uses' => 'Auth\PasswordController@showCreatePasswordForm'
+    ]
+);
+
+$router->post(
+    'user/create-password/{code}',
+    [
+        'as'   => 'create-password',
+        'uses' => 'Auth\PasswordController@createPassword'
+    ]
+);
+
+$router->resource('agency', 'AgencyController');
