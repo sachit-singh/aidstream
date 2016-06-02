@@ -57,7 +57,11 @@ class Registration
             $orgInfo['secondary_contact'] = $users['secondary_contact'];
             $organization                 = $this->saveOrganization($orgInfo);
             $users                        = $this->saveUsers($users, $organization);
-            $orgInfo['id']                = $organization->id;
+            foreach ($users as $user) {
+                ($user->userOnBoarding()->create(['has_logged_in_once' => false]));
+            }
+
+            $orgInfo['id'] = $organization->id;
             $this->saveRegAgency($orgInfo);
             $this->database->commit();
 

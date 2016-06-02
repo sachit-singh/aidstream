@@ -1,14 +1,5 @@
 @extends('settings.settings')
 @section('panel-body')
-    @include('includes.response')
-    <div class="panel-body">
-        <div>User List</div>
-        @if(count($users) > 0)
-            <div>
-
-            </div>
-        @endif
-    </div>
     @if(count($users) > 0)
         <div class="panel-body">
             <table class="table table-striped">

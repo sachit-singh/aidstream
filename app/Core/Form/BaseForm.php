@@ -167,6 +167,7 @@ class BaseForm extends Form
      * @param null  $helpText
      * @param null  $defaultValue
      * @param bool  $required
+     * @param array $customOptions
      * @return $this
      */
     protected function addSelect(
@@ -175,19 +176,24 @@ class BaseForm extends Form
         $label = null,
         $helpText = null,
         $defaultValue = null,
-        $required = false
+        $required = false,
+        $customOptions = []
     ) {
+        $options = [
+            'choices'       => $choices,
+            'label'         => $label,
+            'empty_value'   => 'Select one of the following options',
+            'default_value' => $defaultValue,
+            'help_block'    => $helpText,
+            'required'      => $required
+        ];
+
+        $options = array_merge($options, $customOptions);
+
         return $this->add(
             $name,
             'select',
-            [
-                'choices'       => $choices,
-                'label'         => $label,
-                'empty_value'   => 'Select one of the following options',
-                'default_value' => $defaultValue,
-                'help_block'    => $helpText,
-                'required'      => $required,
-            ]
+            $options
         );
     }
 

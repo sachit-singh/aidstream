@@ -2,6 +2,7 @@
 
 use App\Core\Form\BaseForm;
 use App\Core\V201\Requests\Settings\DefaultValuesRequest;
+use App\Core\V201\Requests\Settings\PublishingSettingsRequest;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Request;
@@ -15,6 +16,7 @@ use Illuminate\Database\DatabaseManager;
 use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\URL;
 use Kris\LaravelFormBuilder\FormBuilder;
 use Psr\Log\LoggerInterface;
 
@@ -432,7 +434,7 @@ class SettingsController extends Controller
      * @param PublishingSettingsRequest|Request $request
      * @return string
      */
-    public function verifyPublisherAndApi(Request $request)
+    public function verifyPublisherAndApi(PublishingSettingsRequest $request)
     {
 
         $apiKey      = $request->get('apiKey');

@@ -235,4 +235,9 @@ class User extends Model implements AuthorizableContract, AuthenticatableContrac
         return $this->belongsTo('App\Models\Role', 'role_id');
     }
 
+    public function userOnBoarding()
+    {
+        return $this->hasOne('App\Models\UserOnBoarding', 'user_id');
+    }
+
 }

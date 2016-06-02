@@ -9,6 +9,7 @@
             <div class="col-xs-9 col-lg-9 content-wrapper settings-wrapper">
                 @include('includes.response')
                 <div class="alert alert-success hidden" id="response"></div>
+                <div class="alert alert-danger hidden" id="error" tabindex="1"></div>
                 <div class="panel panel-default">
                     <div class="element-panel-heading">
                         <div>

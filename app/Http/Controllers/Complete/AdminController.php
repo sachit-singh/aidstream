@@ -5,6 +5,7 @@ use App\Http\Requests\UpdatePasswordRequest;
 use App\Http\Requests\UserRequest;
 use App\Models\Activity\Activity;
 use App\Models\UserActivity;
+use App\Models\UserOnBoarding;
 use App\Services\ActivityLog\ActivityManager;
 use App\Services\Organization\OrganizationManager;
 use App\User;
@@ -113,7 +114,10 @@ class AdminController extends Controller
         $this->user->password        = bcrypt($input['password']);
         $this->user->user_permission = isset($input['user_permission']) ? $input['user_permission'] : [];
 
+
         $response = ($this->user->save()) ? ['type' => 'success', 'code' => ['created', ['name' => 'User']]] : ['type' => 'danger', 'code' => ['save_failed', ['name' => 'User']]];
+
+        UserOnBoarding::create(['has_logged_in_once' => false, 'user_id' => $this->user->id]);
         $this->dbLogger->activity("admin.user_created", ['orgId' => $this->org_id, 'userId' => $this->user->id]);
 
         return redirect()->route('admin.list-users')->withResponse($response);

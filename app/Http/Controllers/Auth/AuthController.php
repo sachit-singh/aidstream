@@ -207,8 +207,23 @@ class AuthController extends Controller
                 Session::put('next_version', $next_version);
                 $version = 'V' . str_replace('.', '', $version);
                 Session::put('version', $version);
-                $redirectPath = ($user->role_id == 1 || $user->role_id == 2) ? config('app.admin_dashboard') : config('app.super_admin_dashboard');
-                $intendedUrl  = Session::get('url.intended');
+
+                if (isset(Auth::user()->userOnBoarding->has_logged_in_once)) {
+                    if (Auth::user()->userOnBoarding->has_logged_in_once) {
+                        $redirectPath = ($user->role_id == 1 || $user->role_id == 2) ? config('app.admin_dashboard') : config('app.super_admin_dashboard');
+                    } else {
+                        Session::put('first_login', true);
+                        $redirectPath = 'welcome';
+                    }
+                } elseif ($user->role_id == 3 || $user->role_id == 4) {
+                    $redirectPath = config('app.super_admin_dashboard');
+                } else {
+                    Auth::user()->userOnBoarding()->create(['has_logged_in_once' => false]);
+                    Session::put('first_login', true);
+                    $redirectPath = 'welcome';
+                }
+
+                $intendedUrl = Session::get('url.intended');
 
                 !(($user->role_id == 3 || $user->role_id == 4) && strpos($intendedUrl, '/admin') === false) ?: $intendedUrl = url('/');
                 !($intendedUrl == url('/')) ?: Session::set('url.intended', $redirectPath);
@@ -279,6 +294,10 @@ class AuthController extends Controller
      */
     public function getLogout()
     {
+        if (isset(Auth::user()->userOnBoarding->has_logged_in_once)) {
+            Auth::user()->userOnBoarding->has_logged_in_once = true;
+            Auth::user()->userOnBoarding->save();
+        }
         Auth::logout();
         Session::flush();
 

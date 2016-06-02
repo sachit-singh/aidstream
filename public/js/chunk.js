@@ -92,6 +92,7 @@ if (typeof(Chunk) == "undefined") var Chunk = {};
             $('#verify').on('click', function (e) {
                 var publisherId = $('#publisher_id').val();
                 var apiKey = $('#api_id').val();
+                $('#error').addClass('hidden');
                 $.ajax({
                     headers: {'X-CSRF-TOKEN': $('[name="_token"]').val()},
                     url: '/publishing-settings/verifyPublisherAndApi',
@@ -104,6 +105,12 @@ if (typeof(Chunk) == "undefined") var Chunk = {};
                         api_key = (api_key) ? "Correct" : "Incorrect";
                         $('#publisher_id_status').val(publisher_response);
                         $('#api_id_status').val(api_key);
+                    },
+                    error: function (data) {
+                        var response = data.responseJSON.publisher_id;
+                        $('#error').removeClass('hidden');
+                        $('#error').focus();
+                        $('#error').html(response);
                     }
                 });
             });
@@ -122,5 +129,5 @@ if (typeof(Chunk) == "undefined") var Chunk = {};
             });
         }
     }
-
-})(jQuery);
+})
+(jQuery);

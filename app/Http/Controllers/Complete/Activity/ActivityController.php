@@ -20,6 +20,7 @@ use App\Services\Twitter\TwitterAPI;
 use App\User;
 use Illuminate\Session\SessionManager;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Session;
 use Psr\Log\LoggerInterface;
 
 
@@ -167,6 +168,8 @@ class ActivityController extends Controller
             }
         }
 
+        Session::forget('first_login');
+
         return view('Activity.index', compact('activities', 'filenames', 'activityPublishedStats', 'messages'));
     }
 
@@ -221,12 +224,12 @@ class ActivityController extends Controller
         $activityDataList['results']        = $activityResult;
         $activityDataList['transaction']    = $activityTransaction;
         $activityDataList['document_links'] = $activityDocumentLinks;
-        $activityDataList['reporting_org'] = $activityData->organization->reporting_org;
+        $activityDataList['reporting_org']  = $activityData->organization->reporting_org;
 
         if ($activityDataList['activity_workflow'] == 0) {
-            $nextRoute                          = route('activity.complete', $id);
+            $nextRoute = route('activity.complete', $id);
         } elseif ($activityDataList['activity_workflow'] == 1) {
-            $nextRoute                          = route('activity.verify', $id);
+            $nextRoute = route('activity.verify', $id);
         } else {
             $nextRoute = route('activity.publish', $id);
         }
@@ -398,8 +401,8 @@ class ActivityController extends Controller
             $key = "country";
         }
 
-        $title = ($settings->publishing_type == "segmented") ? $organization->name.' Activity File-'.$code : $organization->name.' Activity File';
-        $name  = ($settings->publishing_type == "segmented") ? $settings['registry_info'][0]['publisher_id'].'-'.$code : $settings['registry_info'][0]['publisher_id'].'-activities';
+        $title = ($settings->publishing_type == "segmented") ? $organization->name . ' Activity File-' . $code : $organization->name . ' Activity File';
+        $name  = ($settings->publishing_type == "segmented") ? $settings['registry_info'][0]['publisher_id'] . '-' . $code : $settings['registry_info'][0]['publisher_id'] . '-activities';
 
         $requiredData = [
             'title'          => $title,
@@ -850,9 +853,9 @@ class ActivityController extends Controller
      */
     public function downloadActivityXml($activityId)
     {
-        $activityData = $this->activityManager->getActivityData($activityId);
+        $activityData    = $this->activityManager->getActivityData($activityId);
         $activityElement = $this->activityManager->getActivityElement();
-        $xmlService = $activityElement->getActivityXmlService();
+        $xmlService      = $activityElement->getActivityXmlService();
 
         $xml = $xmlService->generateTemporaryActivityXml(
             $this->activityManager->getActivityData($activityId),
@@ -868,7 +871,7 @@ class ActivityController extends Controller
             $xml,
             200,
             [
-                'Content-type' => 'text/xml',
+                'Content-type'        => 'text/xml',
                 'Content-Disposition' => sprintf('attachment; filename=activityXmlFile.xml')
             ]
         );

@@ -2,7 +2,7 @@
 @section('panel-body')
     <div class="panel-body">
 
-        <div class="alert alert-success">The usernames has been changed.</div>
+        <div class="alert alert-success">The username(s) has been changed.</div>
         <ol>
             @foreach($users as $user)
                 @if($user->role_id != 7)

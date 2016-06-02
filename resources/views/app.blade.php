@@ -9,6 +9,7 @@
     <link rel="shotcut icon" type="image/png" sizes="32*32" href="{{ asset('/images/favicon.png') }}"/>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.2-rc.1/css/select2.min.css" rel="stylesheet"/>
     <link href="{{ asset('/css/main.min.css') }}" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/intro.js/2.1.0/introjs.min.css" rel="stylesheet"/>
 
     <!-- Fonts -->
     <link href='//fonts.googleapis.com/css?family=Roboto:400,300' rel='stylesheet' type='text/css'>
@@ -35,7 +36,7 @@
         <div class="collapse navbar-collapse navbar-right" id="bs-example-navbar-collapse-1">
             @if(auth()->user() && !isSuperAdminRoute())
                 <ul class="nav navbar-nav pull-left add-new-activity">
-                    <li class="dropdown">
+                    <li class="dropdown" id="step-2">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button"
                            aria-expanded="false">Add a New Activity<span
                                     class="caret"></span></a>
@@ -57,7 +58,7 @@
                             <span><a href="{{ route('admin.switch-back') }}" class="pull-left">Switch Back</a></span>
                         @endif
                     </li>
-                    <li class="dropdown">
+                    <li class="dropdown" id="step-8">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button"
                            aria-expanded="false"><span class="avatar-img">
                                 @if(Auth::user()->profile_url)
@@ -112,6 +113,10 @@
             </ul>
         </div>
         <div class="navbar-right version-wrap">
+
+            @if(isset(auth()->user()->userOnBoarding->completed_tour) && session('role_id') != 3)
+                <a href="{{url('exploreLater')}}" class="btn btn-primary">Continue exploring AidStream</a>
+            @endif
             @if(auth()->user() && !isSuperAdminRoute())
                 <div class="version pull-right {{ (session('version') == 'V201') ? 'old' : 'new' }}">
                     @if (session('next_version'))
@@ -171,7 +176,8 @@
 <script type="text/javascript" src="{{url('/js/ga.js')}}"></script>
 <script type="text/javascript" src="//cdn.datatables.net/1.10.11/js/jquery.dataTables.min.js"></script>
 <!-- End Google Analytics -->
-
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/intro.js/2.1.0/intro.min.js"></script>
+<script type="text/javascript" src="http://cdn.jsdelivr.net/jquery.validation/1.15.0/jquery.validate.js"></script>
 @yield('script')
 @yield('foot')
 
