@@ -368,4 +368,43 @@ class OrganizationRepository implements OrganizationRepositoryInterface
 
         return $organization->save();
     }
+
+    public function insertNarrativeBlock($orgId, $narrative)
+    {
+        $organization                = $this->getOrganization($orgId);
+        $repOrg                      = $organization->reporting_org;
+        $repOrg[0]['narrative'][]    = $narrative;
+        $organization->reporting_org = $repOrg;
+
+        return $organization->save();
+    }
+
+    public function insertOrgName($orgId, $orgName)
+    {
+        $organization                           = $this->getOrganization($orgId);
+        $repOrg                                 = $organization->reporting_org;
+        $repOrg[0]['narrative'][0]['narrative'] = $orgName;
+        $organization->reporting_org            = $repOrg;
+
+        return $organization->save();
+
+    }
+
+    public function saveRegistrationNo($orgId, $orgIdentifier)
+    {
+        $organization                      = $this->getOrganization($orgId);
+        $organization->registration_number = $orgIdentifier;
+
+        return $organization->save();
+    }
+
+    public function saveRegistrationInfo($orgId, $registrationNumber, $registrationAgency, $country)
+    {
+        $organization                      = $this->getOrganization($orgId);
+        $organization->registration_number = $registrationNumber;
+        $organization->registration_agency = $registrationAgency;
+        $organization->country             = $country;
+
+        return $organization->save();
+    }
 }
